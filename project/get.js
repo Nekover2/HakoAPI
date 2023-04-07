@@ -1,6 +1,12 @@
 const getSiteData = require('../functions/getSiteData');
 const cheerio = require('cheerio');
 
+
+/**
+ * 
+ * @param {String} ID ID or link to the hako project
+ * @returns {Object} General information of this project
+ */
 const getProjectInfo = async (ID) => {
     try {
         let destinationLink = "";

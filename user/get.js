@@ -22,7 +22,11 @@ const sumProjectStat = async (projectLinks) => {
 }
 
 
-
+/**
+ * 
+ * @param {String} ID ID or Link to the hako user
+ * @returns General info of this user
+ */
 let getUserGeneralInfo = async (ID) => {
     try {
         //                 Define user input
@@ -79,12 +83,23 @@ let getUserGeneralInfo = async (ID) => {
 }
 
 
+/**
+ * 
+ * @param {String} ID ID or link to the hako user
+ * @returns Caculate sum of all the user's own projects' some properties
+ */
 let getUserMainProjectSummary = async (ID) => {
     const userGeneralInfo = await getUserGeneralInfo(ID);
     userGeneralInfo.mainProjectSummary = await sumProjectStat(userGeneralInfo.project);
     return userGeneralInfo;
 }
 
+
+/**
+ * 
+ * @param {String} ID ID or link to the hako user
+ * @returns Caculate sum of all the user's side projects' some properties
+ */
 let getUserSubProjectSummary = async (ID) => {
     const userGeneralInfo = await getUserGeneralInfo(ID);
     userGeneralInfo.mainProjectSummary = await sumProjectStat(userGeneralInfo.subProject);
