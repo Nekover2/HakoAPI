@@ -1,19 +1,6 @@
-const { default: axios } = require('axios');
+const getSiteData = require('../functions/getSiteData');
 const cheerio = require('cheerio');
-
-/**
- * 
- * @param {string} destinationLink link of the site you want to get
- * @returns the body of the site
- */
-const getSiteData = async (destinationLink) => {
-    try {
-        const mainRequest = await axios.get(destinationLink);
-        return mainRequest.data;
-    } catch (error) {
-        throw new Error(error);
-    }
-}
+const DOMAIN = "https://ln.hako.vn";
 
 const sumProjectStat = async (projectLinks) => {
     try {

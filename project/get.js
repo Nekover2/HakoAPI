@@ -1,10 +1,14 @@
-const getProjectInfo = async (ID = undefined, link) => {
-    //TODO Add phó post vào thông tin trả về
+const getSiteData = require('../functions/getSiteData');
+const cheerio = require('cheerio');
+
+const getProjectInfo = async (ID) => {
     try {
-        let trueLink = link;
-        if (typeof ID != 'undefined') trueLink = `https://ln.hako.vn/truyen/${ID}`;
-        const mainSiteData = await getSiteData(trueLink);
-        const mainSiteHtml = cheerio.load(mainSiteData);
+        let destinationLink = "";
+        if (ID.toLowerCase().startsWith("http://") || ID.toLowerCase().startsWith("ln.hako.vn") || ID.toLowerCase().startsWith("docln.net")) destinationLink = ID;
+        else destinationLink = `https://ln.hako.vn/truyen/${ID}`;
+
+        let responseHtml = await getSiteData(destinationLink);
+        const mainSiteHtml = cheerio.load(responseHtml);
         let result = {};
 
         result.title = mainSiteHtml('div.series-name-group > span > a').text();
@@ -38,9 +42,12 @@ const getProjectInfo = async (ID = undefined, link) => {
             link: mainSiteHtml('div.fantrans-section > div.fantrans-value > a').attr('href')
         }
 
-        //console.log(result);
         return result;
     } catch (error) {
         throw new Error(error);
     }
+}
+
+module.exports = {
+    getProjectInfo : getProjectInfo
 }
