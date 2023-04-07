@@ -28,6 +28,4 @@ const getCookie = async (username, password) => {
     }
 }
 
-getCookie('chjshchung@gmail.com','chungho982a');
-
 module.exports.getCookie = getCookie;
