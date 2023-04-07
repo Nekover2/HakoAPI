@@ -27,7 +27,7 @@ const sumProjectStat = async (projectLinks) => {
 /**
  * 
  * @param {string} destinationLink link of the site you want to get
- * @returns String the body of the site
+ * @returns the body of the site
  */
 const getSiteData = async (destinationLink) => {
     try {
@@ -140,6 +140,8 @@ const getUserInfo = async (ID = undefined, link, config = { summary:false}) => {
             result.project.push(tmp);
         });
 
+        if(!config.summary) return result;
+        result.summary = await sumProjectStat(projectLinks, config.pjPerPage, config.page);        
         result.subProjectCount = Number(mainSiteHtml('#mainpart > div.container > div > div:nth-child(2) > section:nth-child(2) > header > span.number').text());
         result.subProject = [];
         mainSiteHtml('#mainpart > div.container > div > div:nth-child(2) > section:nth-child(2) > div.row > div').each((index, element) => {
@@ -153,13 +155,13 @@ const getUserInfo = async (ID = undefined, link, config = { summary:false}) => {
             result.subProject.push(tmp);
         });
 
-        if(!config.summary) return result;
-        result.summary = await sumProjectStat(projectLinks, config.pjPerPage, config.page);
         return result;
     } catch (error) {
         throw new Error(error);
     }
 }
+
+
 //getProjectInfo(10711);
 module.exports.getProjectInfo = getProjectInfo;
 module.exports.getUserInfo = getUserInfo;
