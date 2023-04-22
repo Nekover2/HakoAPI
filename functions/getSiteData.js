@@ -11,7 +11,7 @@ const getSiteData = async (destinationLink) => {
         const mainRequest = await axios.get(destinationLink);
         return mainRequest.data;
     } catch (error) {
-        throw new Error(error);
+        throw new Error("Lỗi trong khi nhận dữ liệu đến server");
     }
 }
 

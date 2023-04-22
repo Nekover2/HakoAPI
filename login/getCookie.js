@@ -21,7 +21,7 @@ const getCookie = async (username, password) => {
             headers: loginPage_headerPost
         });
         const cookieFinal = `${response1.headers['set-cookie'].at(0).split(';').at(0).toString()};${response1.headers['set-cookie'].at(1).split(';').at(0).toString()}`
-        console.log(cookieFinal);
+        
         return cookieFinal;
     } catch (error) {
         throw new Error(error);

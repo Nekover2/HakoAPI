@@ -12,7 +12,7 @@ const sumProjectStat = async (projectLinks) => {
         for (const projectLink of projectLinks) {
             let projectInfo = await getProjectInfo(undefined, projectLink);
             result.totalWord += projectInfo.wordCount;
-            result.totalFollow += projectInfo.follow;
+            result.totalFollow += projectInfo.totalFollows;
             result.totalView += projectInfo.viewCount;
         }
         return result;
