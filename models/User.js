@@ -1,6 +1,5 @@
-const axios = require('axios');
+const superagent = require('superagent');
 const cheerio = require('cheerio');
-const HakoProject = require('../Project_class/HakoProject');
 
 
 //Custom Functions
@@ -9,25 +8,10 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-/**
- * Get body/html of a websites 
- * @param {string} destinationLink link of the site you want to get
- * @returns the body of the site
- */
-const getSiteData = async (destinationLink) => {
-    try {
-        const mainRequest = await axios.get(destinationLink);
-        return mainRequest.data;
-    } catch (error) {
-        throw new Error(error);
-    }
-}
 
-module.exports = class HakoUser {
+module.exports = class User {
     #name = "Undefined";
     #link = "https://ln.hako.vn/thanh-vien/id";
-    #roles = [];
-    #badges = [];
 
     #avatarUrl = "https://ln.hako.vn/img/noava.png";
     #memberSince = "Undefined";
@@ -35,99 +19,60 @@ module.exports = class HakoUser {
     #chapterCount = 0;
     #following = 0;
 
-    #postedProjects = [];
-    #joinedProject = [];
-    /**
-     * 
-     * @param {String} src The link or ID to the hako user
-     */
-    constructor(src) {
-        let destinationLink = "";
-        if (src.toLowerCase().startsWith("https://") || src.toLowerCase().startsWith("ln.hako.vn") || src.toLowerCase().startsWith("docln.net")) destinationLink = src;
-        else destinationLink = `https://ln.hako.vn/thanh-vien/${src}`;
-
-        this.#link = destinationLink;
-    }
-
     /**
      * Get user data from ln.hako.vn
      * @returns {Promise<void>}
      */
-    async retrieveData() {
-        const userSite = await getSiteData(this.#link);
-        let cheerioData = cheerio.load(userSite);
-
-        this.#name = cheerioData('h3.profile-intro_name').text();
-        this.#avatarUrl = cheerioData('div.profile-ava > img').attr('src');
-        this.#memberSince = cheerioData('main.sect-body > div:last-child > span.info-value').text();
-
-        this.#chapterCount = Number(cheerioData('ul.statistic-top.row > li:nth-child(1) > div.statistic-value').text());
-        this.#following = Number(cheerioData('ul.statistic-top.row > li:nth-child(2) > div.statistic-value').text());
-
+    static async get(src) {
+        let destinationLink = "";
+        if (src.toLowerCase().startsWith("https://") || src.toLowerCase().startsWith("ln.hako.vn") || src.toLowerCase().startsWith("docln.net")) destinationLink = src;
+        else destinationLink = `https://ln.hako.vn/thanh-vien/${src}`;
         
-        cheerioData('#mainpart > div.container > div > div:nth-child(2) > section:nth-child(1) > div.row > div').each((index, element) => {
-            let projectLink = cheerioData(element).find('div.showcase-item > div.row > div:nth-child(2) > div.series-info > h5.series-name > a').attr('href');
-            let projectName = cheerioData(element).find('div.showcase-item > div.row > div:nth-child(2) > div.series-info > h5.series-name > a').text();
-            let tmp = {
-                title: projectName,
-                link: `https://ln.hako.vn${projectLink}`
-            }
-            this.#postedProjects.push(tmp);
-        });
+        const userSite = await superagent.get(destinationLink);
+        //check if the user exists
+        if (userSite.status !== 200) throw new Error(`cannot find user with link: ${src}`);
 
-        cheerioData('#mainpart > div.container > div > div:nth-child(2) > section:nth-child(2) > div.row > div').each((index, element) => {
-            let projectLink = cheerioData(element).find('div.showcase-item > div.row > div:nth-child(2) > div.series-info > h5.series-name > a').attr('href');
-            let projectName = cheerioData(element).find('div.showcase-item > div.row > div:nth-child(2) > div.series-info > h5.series-name > a').text();
-            let tmp = {
-                title : projectName,
-                link : `https://ln.hako.vn${projectLink}`
-            }
-            this.#joinedProject.push(tmp);
-        });
+
+        let cheerioData = cheerio.load(userSite.text);
+
+        let resultUser = new User();
+        resultUser.#name = cheerioData('h3.profile-intro_name').text();
+        resultUser.#avatarUrl = cheerioData('div.profile-ava > img').attr('src');
+        resultUser.#memberSince = cheerioData('main.sect-body > div:last-child > span.info-value').text();
+
+        resultUser.#chapterCount = Number(cheerioData('ul.statistic-top.row > li:nth-child(1) > div.statistic-value').text());
+        resultUser.#following = Number(cheerioData('ul.statistic-top.row > li:nth-child(2) > div.statistic-value').text());
+
+        return resultUser;
     }
 
-    get name() {
+    getName() {
         return this.#name;
     }
 
-    get link() {
+    getLink() {
         return this.#link;
     }
 
-    get roles() {
-        return this.#roles;
-    }
-
-    get badges() {
-        return this.#badges;
-    }
-
-    get avatarUrl() {
+    getAvatarUrl() {
         return this.#avatarUrl;
     }
 
-    get memberSince() {
+    getMemberSince() {
         return this.#memberSince;
     }
 
-    get chapterCount() {
+    getChapterCount() {
         return this.#chapterCount;
     }
 
-    get following() {
+    getFollowing() {
         return this.#following;
     }
 
-    get postedProjects() {
-        return this.#postedProjects;
-    }
-
-    get joinedProject() {   
-        return this.#joinedProject;
-    }
 
     toString() {
-        return `Name: ${this.#name} | Link: ${this.#link} | Roles: ${this.#roles} | Badges: ${this.#badges} | Avatar: ${this.#avatarUrl} | Member since: ${this.#memberSince} | Chapter count: ${this.#chapterCount} | Following: ${this.#following} | Posted projects: ${this.#postedProjects} | Joined projects: ${this.#joinedProject}`;
+        return `Name: ${this.#name} | Link: ${this.#link}| Avatar: ${this.#avatarUrl} | Member since: ${this.#memberSince} | Chapter count: ${this.#chapterCount} | Following: ${this.#following}`;
     }
 
     // /**
