@@ -20,12 +20,6 @@
 npm install node-hako-api
 ```
 
-[yarn][]:
-
-```sh
-yarn add nodehakoapi
-```
-
 
 ## Usage
 
