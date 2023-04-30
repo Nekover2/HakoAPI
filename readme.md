@@ -39,6 +39,8 @@ const NHA = require('node-hako-api');
 (async () => {
     //get user info
     let userInfo = await NHA.User.get("https://ln.hako.vn/thanh-vien/104802");
+    let projectInfo = await NHA.Project.get("https://ln.hako.vn/project/10000");
+    
     console.log(userInfo.toString());
 })();
 ```
