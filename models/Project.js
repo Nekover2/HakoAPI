@@ -37,7 +37,7 @@ module.exports = class Project {
         let resultProject = new Project();
 
         resultProject.#name = cheerioData('div.series-name-group > span > a').text();
-        resultProject.#link = destinationLink;
+        resultProject.#link = `https://ln.hako.vn${cheerioData('span.series-name > a').attr('href')}`;
         resultProject.#coverURL = cheerioData('div.series-cover > div.a6-ratio > div.content').attr('style').split("'").at(1);
 
         resultProject.#author = cheerioData('div.series-information > div:nth-child(2) > span.info-value > a').text();
