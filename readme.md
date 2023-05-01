@@ -17,7 +17,7 @@
 [npm][]:
 
 ```sh
-npm install node-hako-api
+npm install nodehakoapi
 ```
 
 
@@ -32,10 +32,17 @@ const NHA = require('nodehakoapi');
 
 (async () => {
     //get user info
-    let userInfo = await NHA.User.get("https://ln.hako.vn/thanh-vien/104802");
-    let projectInfo = await NHA.Project.get("https://ln.hako.vn/project/10000");
+    let userInfo = await NHA.common.User.get("https://ln.hako.vn/thanh-vien/104802");
+    let projectInfo = await NHA.common.User.get("https://ln.hako.vn/project/10000");
 
-    console.log(userInfo.toString());
+    //Auth required function
+
+    let User = new NHA.managers.UserManager("username", "password");
+    let user = await User.login();
+    //get notification
+    let notification = await user.getNotification();
+    //get unread project
+    let unreadProject = await user.getUnreadProject();
 })();
 ```
 

@@ -26,6 +26,12 @@ module.exports = class HakoVolume {
 
     // Static method
 
+    /**
+     * 
+     * @param {string} url url of volume 
+     * @returns {Promise<HakoVolume>}
+     */
+
     static async getVolume(url) {
 
         try {

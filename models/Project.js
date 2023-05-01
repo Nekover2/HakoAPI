@@ -23,7 +23,26 @@ module.exports = class Project {
     #rating = 0;
     #totalViews = 0;
     
+    #volumes = [
+        {
+            name: 'init',
+            link: 'https://ln.hako.vn/sth...',
+            coverUrl : 'https://ln.hako.vn/img/nocover.jpg',
+            chapters: [
+                {
+                    name: 'init',
+                    link: 'https://ln.hako.vn/sth...',
+                    releaseDate: 'init',
+                }
+            ]
+        }
+    ];
 
+    /**
+     * 
+     * @param {string} ID ID or link of the project 
+     * @returns {Promise<Project>}
+     */
     static async get(ID) {
         let destinationLink = "";
         if (ID.startsWith("https://") || ID.startsWith("ln.hako.vn") || ID.startsWith("docln.net")) destinationLink = ID;
@@ -63,6 +82,31 @@ module.exports = class Project {
         resultProject.#totalWords = Number(cheerioData('div.row.statistic-list > div:nth-child(2) > div.statistic-value').text().replaceAll('.', ''));
         resultProject.#rating = cheerioData('div.row.statistic-list > div:nth-child(3) > div.statistic-value').text().replaceAll('.', '');
         resultProject.#totalViews = Number(cheerioData('div.row.statistic-list > div:nth-child(4) > div.statistic-value').text().replaceAll('.', ''));
+
+        //volumes
+
+        let volumeBlocks = cheerioData('section.volume-list.at-series').toArray();
+
+        resultProject.#volumes = [];
+        for(const volumeBlock of volumeBlocks) {
+            let volume = {
+                name: cheerioData(volumeBlock).find('header > span.sect-title').text().replaceAll('\n', ''),
+                link: 'https://ln.hako.vn' + cheerioData(volumeBlock).find('div.volume-cover > a').attr('href'),
+                coverUrl : cheerioData(volumeBlock).find('div.content.img-in-ratio').attr('style').split('url(').at(1).split(')').at(0),
+                chapters: []
+            }
+
+            let chapterBlocks = cheerioData(volumeBlock).find('ul.list-chapters > li').toArray();
+            for(const chapterBlock of chapterBlocks) {
+                let chapter = {
+                    name: cheerioData(chapterBlock).find('div.chapter-name > a').text(),
+                    link: 'https://ln.hako.vn' +  cheerioData(chapterBlock).find('div.chapter-name > a').attr('href'),
+                    releaseDate: cheerioData(chapterBlock).find('div.chapter-time').text(),
+                }
+                volume.chapters.push(chapter);
+            }
+            resultProject.#volumes.push(volume);
+        }
 
         return resultProject;
     }
@@ -116,6 +160,10 @@ module.exports = class Project {
     }
     getLink() {
         return this.#link;
+    }
+
+    getVolumes() {
+        return this.#volumes;
     }
 
     toString() {

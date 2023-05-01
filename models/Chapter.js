@@ -46,6 +46,7 @@ module.exports = class Chapter {
     /**
      * get the data of a chapter from the url
      * @param {string} url 
+     * @returns {Promise<Chapter>}
      */
     static async get(url) {
         try {

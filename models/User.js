@@ -21,7 +21,7 @@ module.exports = class User {
 
     /**
      * Get user data from ln.hako.vn
-     * @returns {Promise<void>}
+     * @returns {Promise<User>}
      */
     static async get(src) {
         let destinationLink = "";

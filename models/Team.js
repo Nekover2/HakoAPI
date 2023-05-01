@@ -31,6 +31,11 @@ module.exports = class Team {
     }
     // Static method to get a team from the web
 
+    /**
+     * 
+     * @param {string} input Id or url of the team 
+     * @returns {Promise<Team>}
+     */
     static async get(input) {
 
         let finalUrl = '';
