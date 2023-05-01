@@ -41,8 +41,8 @@ const NHA = require('nodehakoapi');
 
     //Auth required function
 
-    let User = new NHA.managers.UserManager("username", "password");
-    let user = await User.login();
+    let user = new NHA.managers.UserManager("username", "password");
+    let user = await user.login();
     //get notification
     let notification = await user.getNotifications();
     //get unread project
