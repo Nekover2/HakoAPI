@@ -3,14 +3,6 @@ const cheerio = require('cheerio');
 
 module.exports = class FollowingProject {
 
-    /**
-     * @type {string} name
-     * @type {string} id
-     * @type {string} url
-     * @type {string} type
-     * @type {{name : string, link : string}} newestChapter
-     * @type {Array<{name : string, value : string}>} cookies
-     */
     #name;
     #id;
     #url;
@@ -18,7 +10,7 @@ module.exports = class FollowingProject {
     #newestChapter;
     #cookies;
 
-    constructor(name = "", id = "", url = "", type = "", newestChapter = { name : '', link : ""}, cookies = []) {
+    constructor(name = "", id = "", url = "", type = "", newestChapter = { name : '', link : ""}, cookies = [{name: '', value: ''}]) {
         this.#name = name;
         this.#id = id;
         this.#url = url;

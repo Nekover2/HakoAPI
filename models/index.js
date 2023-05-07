@@ -3,7 +3,7 @@ const Project = require('./Project');
 (async () => {
     try {
         const project = await Project.get('https://ln.hako.vn/truyen/787-tensei-shitara-kendeshita');
-        //console.log(project);
+        console.log(project.toString());
     } catch (error) {
         console.log(error);
     }

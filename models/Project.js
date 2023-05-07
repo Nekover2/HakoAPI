@@ -5,6 +5,7 @@ const cheerio = require('cheerio');
 
 module.exports = class Project {
     #link = "https://ln.hako.vn/truyen/ID";
+    #id = "ID";
     #name = "Undefined";
     #coverURL = "https://ln.hako.vn/img/nocover.jpg";
     #author = "Undefined";
@@ -23,6 +24,14 @@ module.exports = class Project {
     #rating = 0;
     #totalViews = 0;
     
+    #chapters = [
+        {
+            name: 'init',
+            link: 'https://ln.hako.vn/sth...',
+            releaseDate: 'init',
+        }
+    ]
+
     #volumes = [
         {
             name: 'init',
@@ -56,6 +65,7 @@ module.exports = class Project {
         let resultProject = new Project();
 
         resultProject.#name = cheerioData('div.series-name-group > span > a').text();
+        resultProject.#id = cheerioData('div.series-name-group > span > a').attr('href').split('/').at(-1).split('-').at(0);
         resultProject.#link = `https://ln.hako.vn${cheerioData('span.series-name > a').attr('href')}`;
         resultProject.#coverURL = cheerioData('div.series-cover > div.a6-ratio > div.content').attr('style').split("'").at(1);
 
@@ -88,6 +98,7 @@ module.exports = class Project {
         let volumeBlocks = cheerioData('section.volume-list.at-series').toArray();
 
         resultProject.#volumes = [];
+        resultProject.#chapters = [];
         for(const volumeBlock of volumeBlocks) {
             let volume = {
                 name: cheerioData(volumeBlock).find('header > span.sect-title').text().replaceAll('\n', ''),
@@ -104,6 +115,7 @@ module.exports = class Project {
                     releaseDate: cheerioData(chapterBlock).find('div.chapter-time').text(),
                 }
                 volume.chapters.push(chapter);
+                resultProject.#chapters.push(chapter);
             }
             resultProject.#volumes.push(volume);
         }
@@ -113,6 +125,10 @@ module.exports = class Project {
 
     getName() {
         return this.#name;
+    }
+
+    getID() {
+        return this.#id;
     }
 
     getCoverURL() {
@@ -166,7 +182,11 @@ module.exports = class Project {
         return this.#volumes;
     }
 
+    getChapters() { 
+        return this.#chapters;
+    }
+
     toString() {
-        return `Name: ${this.#name}\nCover URL: ${this.#coverURL}\nAuthor: ${this.#author}\nIllustrator: ${this.#illustrator}\nStatus: ${this.#status}\nOwner: ${this.#owner.name}\nHelpers: ${this.#helpers.length}\nTotal Follows: ${this.#totalFollows}\nLast Update: ${this.#lastUpdate}\nTotal Words: ${this.#totalWords}\nRating: ${this.#rating}\nTotal Views: ${this.#totalViews}\nLink: ${this.#link}`;
+        return `Name: ${this.#name}\nLink: ${this.#link}\nId: ${this.#id}\nCoverURL: ${this.#coverURL}\nAuthor: ${this.#author}\nIllustrator: ${this.#illustrator}\nStatus: ${this.#status}\nOwner: ${this.#owner.name}\nHelpers: ${this.#helpers.map(helper => helper.name).join(', ')}\nTotalFollows: ${this.#totalFollows}\nLastUpdate: ${this.#lastUpdate}\nTotalWords: ${this.#totalWords}\nRating: ${this.#rating}\nTotalViews: ${this.#totalViews}\nVolumes: ${this.#volumes.length}\nChapters: ${this.#chapters.length}`
     }
 }
