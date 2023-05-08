@@ -69,7 +69,7 @@ module.exports = class Chapter {
             resultChapter.#id = url.split("/").at(-1).split("-").shift();
             resultChapter.#projectId = url.split("/").at(-2).split("-").shift();
             resultChapter.#lastUpdate = new Date($('div.title-top > h6 > time').attr('datetime'));
-            resultChapter.#totalWords = parseInt($('div.title-top > h6').text().trim().slice(8).replace(',', ''));
+            resultChapter.#totalWords = parseInt($('div.title-top > h6').text().split(": ").at(1).trim().replaceAll(",", ""));
 
             let contentHtml = $('div#chapter-content > p').toArray();
             resultChapter.#content = '';

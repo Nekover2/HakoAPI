@@ -1,10 +1,10 @@
 const Project = require('./Project');
+const Chapter = require('./Chapter');
 
 (async () => {
     try {
-        const project = await Project.get('https://ln.hako.vn/truyen/787-tensei-shitara-kendeshita');
-        let res = project.getChapters();
-        console.log(res);
+        const test = await Chapter.get("https://ln.hako.vn/truyen/12624-u-shiro-no-seki-no-gyaru-ni-suka-rete-shimatta-mo-ore-wa-damekamoshirenai/c98485-chuong-01");
+        console.log(test.getTotalWords());
     } catch (error) {
         console.log(error);
     }
