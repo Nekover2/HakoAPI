@@ -110,6 +110,7 @@ module.exports = class Project {
             let chapterBlocks = cheerioData(volumeBlock).find('ul.list-chapters > li').toArray();
             for(const chapterBlock of chapterBlocks) {
                 let chapter = {
+                    id: cheerioData(chapterBlock).find('div.chapter-name > a').attr('href').split("/").at(-1).split("-").shift(),
                     name: cheerioData(chapterBlock).find('div.chapter-name > a').text(),
                     link: 'https://ln.hako.vn' +  cheerioData(chapterBlock).find('div.chapter-name > a').attr('href'),
                     releaseDate: cheerioData(chapterBlock).find('div.chapter-time').text(),
