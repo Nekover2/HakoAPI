@@ -29,6 +29,7 @@ module.exports = class Project {
             name: 'init',
             link: 'https://ln.hako.vn/sth...',
             releaseDate: 'init',
+            id: 'init'
         }
     ]
 
