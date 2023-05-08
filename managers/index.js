@@ -1,8 +1,8 @@
 const UserManager = require('./UserManager');
 
 (async () => {
-    const user = new UserManager('username', 'password');
+    const user = new UserManager('mpid291004@gmail.com', 'chungho982a');
     await user.login();
-    let unreadProject = await user.getNotifications();
-    console.log(unreadProject.at(0).toString());
+    let res = await user.followProject(4167);
+    console.log(res);
 })();
