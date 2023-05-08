@@ -158,9 +158,40 @@ module.exports = class UserManager {
             _token: sessionToken
         }
 
-        const secondResponse = await axios.post('https://ln.hako.vn/action/series/collect', body, { headers: headers });
+        let secondResponse = await axios.post('https://ln.hako.vn/action/series/collect', body, { headers: headers });
 
-        return secondResponse.data;
+        if(secondResponse.data.collected == false) secondResponse = await axios.post('https://ln.hako.vn/action/series/collect', body, { headers: headers });
+        return secondResponse.data.collected;
+    }
+
+    
+    /**
+     * Follow or unfollow a project
+     * @param {string} projectId 
+     * @returns {Promise<FollowingProject>} status of action, colleced mean you currently flollowing this project or not
+     */
+    async unfollowProject(projectId) {
+        projectId = parseInt(projectId);
+        const headers = {
+            Cookie: `${this.#cookies[0].name}=${this.#cookies[0].value};${this.#cookies[1].name}=${this.#cookies[1].value}`,
+        }
+
+        const firstResponse = await axios.get(`https://ln.hako.vn/truyen/${projectId}`, {
+            headers: headers
+        });
+
+        const $ = cheerio.load(firstResponse.data);
+        let sessionToken = $('body > script[data-turbo-eval="false"]').text().split('window.livewire_token')[1].split("'")[1];
+
+        let body = {
+            series_id: projectId,
+            _token: sessionToken
+        }
+
+        let secondResponse = await axios.post('https://ln.hako.vn/action/series/collect', body, { headers: headers });
+
+        if(secondResponse.data.collected == true) secondResponse = await axios.post('https://ln.hako.vn/action/series/collect', body, { headers: headers });
+        return !secondResponse.data.collected;
     }
 
     markAllAsRead() {
