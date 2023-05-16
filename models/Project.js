@@ -56,7 +56,7 @@ module.exports = class Project {
     static async get(ID) {
         let destinationLink = "";
         if (ID.startsWith("https://") || ID.startsWith("ln.hako.vn") || ID.startsWith("docln.net")) destinationLink = ID;
-        else destinationLink = `https://ln.hako.vn${ID}`;
+        else destinationLink = `https://ln.hako.vn/truyen/${ID}`;
 
         const projectSite = await superagent.get(destinationLink);
         //check if the project exists
